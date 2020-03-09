@@ -13,9 +13,9 @@ http.createServer(function (req, res) {
   var path = url.parse(req.url).pathname;
   if( path === '/' || path === '/home' ) { app.home(res);           } // homepage
   else if( path === '/auth')    { app.handler(req, res);            } // authenticator
-  else if( path === '/private') { app.validate(req, res, app.done); } // private content
   else if( path === '/logout')  { app.logout(req, res, app.done);   } // end session
   else if( path === '/signup')  { app.signup(req, res);             }
+  else if( path === '/recipes') { app.recipes(req, res);             }
   else                          { app.notFound(res);                } // 404 error
 }).listen(port);
 
