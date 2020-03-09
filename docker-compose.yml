@@ -1,0 +1,22 @@
+version : '3'
+
+services:
+    database:
+        image: 'mongo'
+        container_name: mongo_db
+        networks:
+            - backend
+        ports:
+            - 27017:27017
+    app:
+        build: .
+        container_name: node_container
+        networks:
+            - backend
+  #      volumes:
+   #         - ./:/root/app
+        ports:
+            - 8080:8080
+
+networks:
+    backend:
