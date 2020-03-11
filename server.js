@@ -1,23 +1,222 @@
-var port = 8080;
-var http = require('http');          // core node.js http (no frameworks)
-var url = require('url');            // core node.js url (no frameworks)
-var app  = require('./lib/helpers'); // auth, token verification & render helpers
-var c    = function(res){ /*  */ };
+var jwt = require('jsonwebtoken');
+var express = require("express");
+var cookieParser = require('cookie-parser')
 
-process.on('SIGINT', function() {
-  console.log( "\nGracefully shutting down from SIGINT (Ctrl-C)" );
-  process.exit(1);
+var MongoClient = require("mongodb").MongoClient
+
+var mongoClient = new MongoClient("mongodb://database:27017/", {
+    useNewUrlParser: true
 });
 
-http.createServer(function (req, res) {
-  var path = url.parse(req.url).pathname;
-  if( path === '/' || path === '/home' ) { app.home(res);           } // homepage
-  else if( path === '/auth')     { app.handler(req, res);            } // authenticator
-  else if( path === '/logout')   { app.logout(req, res, app.done);   } // end session
-  else if( path === '/signup')   { app.signup(req, res);             }
-  else if( path === '/recipes')  { app.recipes(req, res);            }
-  else if( path === '/addRecipe') { app.addRecipe(req, res);          }
-  else                           { app.notFound(res);                } // 404 error
-}).listen(port);
+// Roles
+const adminRole = 'Admin'
+const userRole = 'User'
 
-console.log("The server is running at " + port);
+// Port
+var port = 8080;
+
+//JWT secret
+var secret = process.env.JWT_SECRET || "CHANGE_THIS_TO_SOMETHING_RANDOM";
+
+var app = express();
+var router = express.Router();
+
+app.set("view engine", "ejs")
+app.use(cookieParser());
+app.use(express.urlencoded());
+app.use('/', router);
+
+app.listen(port);
+
+router.post("/signup", function(req, res, next) {
+    mongoClient.connect(function(err, client) {
+        if (err) {
+            return console.log(err);
+        }
+
+        let user = {
+            name: req.body.username,
+            password: req.body.password,
+            role: userRole
+        }
+        console.log("new user", user)
+
+        client.db("BAR").collection("users").insertOne(user, function(err, result) {
+            if (err) {
+                return console.log("insrtion error:", err);
+            }
+            console.log("insert OK!");
+        });
+    });
+
+    res.writeHead(302, {
+        'Location': '/auth'
+    });
+    return res.end();
+})
+
+router.get("/signup", function(req, res, next) {
+    return res.render('signup');
+})
+
+router.post("/auth", function(req, res, next) {
+    mongoClient.connect(function(err, client) {
+        if (err) {
+            return console.log(err);
+        }
+
+        let user = {
+            name: req.body.username
+        }
+
+        client.db("BAR").collection("users").findOne(user, function(err, u) {
+            if (err) {
+                return console.log(err);
+            }
+
+            if (u === null) {
+                return authFail(res);
+            }
+
+            if (
+                req.body.username && req.body.username === u.name &&
+                req.body.password && req.body.password === u.password) {
+                console.log("I know this user!");
+                return authSuccess(req, res, u);
+            }
+
+            return authFail(res);
+        });
+    });
+})
+
+
+router.get("/auth", function(req, res, next) {
+    return res.render('index')
+})
+
+router.get("/recipes", function(req, res, next) {
+    var decoded = verify(req.cookies.token);
+    console.log(decoded);
+    if (!decoded) {
+        return authFail(res);
+    } else {
+        if (decoded.role === adminRole) {
+            mongoClient.connect(function(err, client) {
+                if (err) {
+                    return console.log(err);
+                }
+
+                client.db("BAR").collection("recipes").find().toArray(function(err, results) {
+                    console.log("results:", results);
+                    console.log("render");
+                    return res.render('recipes', {
+                        records: results
+                    });
+                });
+            });
+        } else {
+            mongoClient.connect(function(err, client) {
+                if (err) {
+                    return console.log(err);
+                }
+
+                let owner = {
+                    name: decoded.name
+                }
+
+                console.log("owner ", owner);
+
+                client.db("BAR").collection("recipes").find(owner).toArray(function(err, results) {
+                    console.log("results:", results);
+                    console.log("render");
+                    return res.render('recipes', {
+                        records: results
+                    });
+                });
+            });
+        }
+    }
+})
+
+router.post("/addRecipe", function(req, res, next) {
+    var decoded = verify(req.cookies.token);
+    if (!decoded) {
+        authFail(res);
+        return callback(res);
+    }
+
+    mongoClient.connect(function(err, client) {
+        if (err) {
+            return console.log(err);
+        }
+
+        let newRecipe = {
+            name: decoded.name,
+            recipe: req.body.recipe
+        }
+
+        console.log("new recipe", newRecipe)
+
+        client.db("BAR").collection("recipes").insertOne(newRecipe, function(err, result) {
+            if (err) {
+                return console.log("insrtion error:", err);
+            }
+            console.log("insertion recipe finished with OK!");
+        });
+        res.writeHead(302, {
+            'Location': '/recipes'
+        });
+        return res.end();
+    });
+})
+
+router.get("/addRecipe", function(req, res, next) {
+    return res.render('addRecipe');
+})
+
+// create JWT
+function generateToken(opts, user) {
+    opts = opts || {};
+
+    // By default, expire the token after 7 days.
+    // NOTE: the value for 'exp' needs to be in seconds since
+    // the epoch as per the spec!
+    var expiresDefault = '7d';
+
+    var token = jwt.sign({
+        name: user['name'],
+        role: user['role']
+    }, secret, {
+        expiresIn: opts.expires || expiresDefault
+    });
+
+    return token;
+}
+
+function authSuccess(req, res, user) {
+    var token = generateToken(null, user);
+    console.log("auth succsess")
+
+    res.cookie('token', token)
+    res.writeHead(302, {
+        'Location': '/recipes'
+    });
+    return res.end();
+}
+
+function authFail(res, callback) {
+    return res.render('fail');
+}
+
+function verify(token) {
+    var decoded = false;
+    jwt.verify(token, secret, function(err, payload) {
+        if (err) {
+            decoded = false; // still false
+        } else {
+            decoded = payload;
+        }
+    });
+    return decoded;
+}
