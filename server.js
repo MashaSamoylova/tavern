@@ -1,30 +1,51 @@
-var jwt = require('jsonwebtoken');
-var express = require("express");
-var cookieParser = require('cookie-parser')
-const http = require('http')
-const WebSocket = require('ws')
+/* Modules */
+const cookieParser = require('cookie-parser')
+const jwt          = require('jsonwebtoken');
+const express      = require("express");
+const http         = require('http')
+const WebSocket    = require('ws')
+const {
+    execSync
+} = require('child_process');
 
-const { execSync } = require('child_process');
-
+/* MongoClient initialization */
 var MongoClient = require("mongodb").MongoClient
-
 var mongoClient = new MongoClient("mongodb://database:27017/", {
     useNewUrlParser: true
 });
 
+// Making usernames unique
+mongoClient.connect(function(err, client) {
+    if (err) {
+        return console.log(err);
+    }
+    client.db("BAR").collection("users").createIndex({ name: 1 }, { unique: true }, function(err, result) {
+        if(err) {
+        console.log(err);
+    
+        } else {
+        console.log(result);
+    } 
+    });
+});
+
+/* Constants */
 // Roles
 const adminRole = 'Admin'
 const userRole = 'User'
 
 // Port
-var port = 8080;
+const port = 8080;
 
-//JWT secret
-var secret = process.env.JWT_SECRET || "CHANGE_THIS_TO_SOMETHING_RANDOM";
-var seed = "104101108108111";
+// JWT secret
+const secret = process.env.JWT_SECRET || "CHANGE_THIS_TO_SOMETHING_RANDOM";
+const seed = "104101108108111";
 
+/* App initialization */
 var app = express();
 var router = express.Router();
+var server = http.createServer(app);
+var wss = new WebSocket.Server({server})
 
 app.set("view engine", "ejs");
 app.use(express.static(__dirname + '/views'));
@@ -32,38 +53,50 @@ app.use(cookieParser());
 app.use(express.urlencoded());
 app.use('/', router);
 
-server = http.createServer(app);
-
-const wss = new WebSocket.Server({ server })
-
-wss.on('connection', function connection (ws, req) {
-  ws.on('message', function incoming (message) {
-
-    console.log('received: %s', message)
-    mongoClient.connect(function(err, client) {
-                if (err) {
-                    return console.log(err);
-                }
-
-                let owner = {
-                    name: message
-                }
-
-                console.log("owner ", owner);
-
-                client.db("BAR").collection("recipes").find(owner).toArray(function(err, results) {
-                    results.forEach(function (res) {
-                        ws.send(res.recipe)
-                    })
-                });
-            });
-  })
-
-  ws.send('something')
-})
-
-//app.listen(port);
 server.listen(port);
+
+/* SUPPA PUPPA service logic */
+//      .
+//        .
+//    . ;.
+//     .;
+//      ;;.
+//    ;.;;
+//    ;;;;.
+//    ;;;;;
+//    ;;;;;
+//    ;;;;;
+//    ;;;;;
+//    ;;;;;
+//  ..;;;;;..
+//   ':::::'
+//     ':`
+
+wss.on('connection', function connection(ws, req) {
+    ws.on('message', function incoming(message) {
+
+        console.log('received: %s', message)
+        mongoClient.connect(function(err, client) {
+            if (err) {
+                return console.log(err);
+            }
+
+            let owner = {
+                name: message
+            }
+
+            console.log("owner ", owner);
+
+            client.db("BAR").collection("recipes").find(owner).toArray(function(err, results) {
+                results.forEach(function(res) {
+                    ws.send(res.recipe)
+                })
+            });
+        });
+    })
+
+    ws.send('something')
+})
 
 
 router.get("/", function(req, res, next) {
@@ -152,7 +185,6 @@ router.get("/auth", function(req, res, next) {
 
 router.get("/recipes", function(req, res, next) {
     var decoded = verify(req.cookies.token);
-    console.log(decoded);
     if (!decoded) {
         return authFail(res);
     } else {
@@ -161,10 +193,7 @@ router.get("/recipes", function(req, res, next) {
                 if (err) {
                     return console.log(err);
                 }
-
                 client.db("BAR").collection("recipes").find().toArray(function(err, results) {
-                    console.log("results:", results);
-                    console.log("render");
                     return res.render('recipes', {
                         records: results
                     });
@@ -180,11 +209,7 @@ router.get("/recipes", function(req, res, next) {
                     name: decoded.name
                 }
 
-                console.log("owner ", owner);
-
                 client.db("BAR").collection("recipes").find(owner).toArray(function(err, results) {
-                    console.log("results:", results);
-                    console.log("render");
                     return res.render('recipes', {
                         records: results
                     });
@@ -211,8 +236,6 @@ router.post("/addRecipe", function(req, res, next) {
             recipe: req.body.recipe
         }
 
-        console.log("new recipe", newRecipe)
-
         client.db("BAR").collection("recipes").insertOne(newRecipe, function(err, result) {
             if (err) {
                 return console.log("insrtion error:", err);
@@ -231,19 +254,25 @@ router.get("/addRecipe", function(req, res, next) {
 })
 
 router.get("/bar", function(req, res, next) {
-    mongoClient.connect(function(err, client) {
-        if (err) {
-            return console.log(err);
-        }
+    var decoded = verify(req.cookies.token);
+    if (!decoded) {
+        res.writeHead(302, {
+            'Location': '/auth'
+        });
+        return res.end();
+    } else {
+        mongoClient.connect(function(err, client) {
+            if (err) {
+                return console.log(err);
+            }
 
-        client.db("BAR").collection("users").find().toArray(function(err, results) {
-            console.log("results:", results);
-            console.log("render");
-            return res.render('bar', {
-                records: results
+            client.db("BAR").collection("users").find().toArray(function(err, results) {
+                return res.render('bar', {
+                    records: results
+                });
             });
         });
-    });
+    }
 })
 
 
@@ -268,7 +297,6 @@ function generateToken(opts, user) {
 
 function authSuccess(req, res, user) {
     var token = generateToken(null, user);
-    console.log("auth succsess")
 
     res.cookie('token', token)
     res.writeHead(302, {
