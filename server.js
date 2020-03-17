@@ -4,6 +4,8 @@ var cookieParser = require('cookie-parser')
 const http = require('http')
 const WebSocket = require('ws')
 
+const { execSync } = require('child_process');
+
 var MongoClient = require("mongodb").MongoClient
 
 var mongoClient = new MongoClient("mongodb://database:27017/", {
@@ -19,6 +21,7 @@ var port = 8080;
 
 //JWT secret
 var secret = process.env.JWT_SECRET || "CHANGE_THIS_TO_SOMETHING_RANDOM";
+var seed = "104101108108111";
 
 var app = express();
 var router = express.Router();
@@ -88,7 +91,7 @@ router.post("/signup", function(req, res, next) {
 
         let user = {
             name: req.body.username,
-            password: req.body.password,
+            password: hash(req.body.password),
             role: userRole
         }
         console.log("new user", user)
@@ -132,7 +135,7 @@ router.post("/auth", function(req, res, next) {
 
             if (
                 req.body.username && req.body.username === u.name &&
-                req.body.password && req.body.password === u.password) {
+                req.body.password && hash(req.body.password) === u.password) {
                 console.log("I know this user!");
                 return authSuccess(req, res, u);
             }
@@ -276,6 +279,10 @@ function authSuccess(req, res, user) {
 
 function authFail(res, callback) {
     return res.render('fail');
+}
+
+function hash(password) {
+    return execSync("./bhash.py " + password + " " + seed).toString().slice(0, -1)
 }
 
 function verify(token) {
