@@ -1,0 +1,26 @@
+body {
+	background-image: url(../img/back.jpeg);
+}
+
+.form {
+	text-align: center;
+}
+
+.form img {
+	position: absolute;
+	z-index: -1;
+	left: 410px;
+	width: 400px;
+    top: -10px;
+}
+
+.text-center.mb-4{
+	width: 250px;
+	padding-top: 88px;
+}
+
+.btn.btn-success {
+	margin-top: 16px;
+	background-color: #a26a2f;
+	border-color: #a26a2f;
+}
