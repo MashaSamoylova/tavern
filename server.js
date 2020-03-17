@@ -125,15 +125,11 @@ wss.on('connection', function connection(ws, req) {
     })
 })
 
-
 router.get("/", function(req, res, next) {
     var decoded = verify(req.cookies.token);
     console.log(decoded);
     if (!decoded) {
-        res.writeHead(302, {
-            'Location': '/auth'
-        });
-        return res.end();
+        return res.render('index');
     } else {
         res.writeHead(302, {
             'Location': '/bar'
@@ -141,7 +137,6 @@ router.get("/", function(req, res, next) {
         return res.end();
     }
 })
-
 
 router.post("/signup", function(req, res, next) {
     mongoClient.connect(function(err, client) {
@@ -205,9 +200,8 @@ router.post("/auth", function(req, res, next) {
     });
 })
 
-
 router.get("/auth", function(req, res, next) {
-    return res.render('index')
+    return res.render('auth')
 })
 
 router.get("/recipes", function(req, res, next) {
