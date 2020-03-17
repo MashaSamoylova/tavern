@@ -35,28 +35,46 @@ const wss = new WebSocket.Server({ server })
 
 wss.on('connection', function connection (ws, req) {
   ws.on('message', function incoming (message) {
+    var json = JSON.parse(message);
+    if (json.cmd == 'get_name') {
+        var decode = verify(json.token);
+        if (decode) {
+            ws.send(JSON.stringify({
+               "name": decode.name}));    
+        } else {
+            ws.send(JSON.stringify({
+               "name": "strange person"}));
+        }
+        
+    } 
+    if (json.cmd == 'get_recipe') {  
+        var name = json.name;
+        if (name) {
+        console.log('received: %s', message)
+        mongoClient.connect(function(err, client) {
+                    if (err) {
+                        return console.log(err);
+                    }
 
-    console.log('received: %s', message)
-    mongoClient.connect(function(err, client) {
-                if (err) {
-                    return console.log(err);
-                }
+                    let owner = {
+                        name: name
+                    }
 
-                let owner = {
-                    name: message
-                }
+                    console.log("owner ", owner);
 
-                console.log("owner ", owner);
-
-                client.db("BAR").collection("recipes").find(owner).toArray(function(err, results) {
-                    results.forEach(function (res) {
-                        ws.send(res.recipe)
-                    })
+                    client.db("BAR").collection("recipes").find(owner).toArray(function(err, results) {
+                        results.forEach(function (res) {
+                             ws.send(JSON.stringify({
+                                "recipes": res.recipe}));
+                        })
+                    });
                 });
-            });
+    } else {
+        ws.send('something')        
+    }
+    }
+    
   })
-
-  ws.send('something')
 })
 
 //app.listen(port);
