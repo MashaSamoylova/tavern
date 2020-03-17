@@ -1,0 +1,51 @@
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Honey Bar</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/3.2.0/united/bootstrap.min.css">
+    <style type="text/css">
+      .form-signin {
+        width: 100%;
+        max-width: 420px;
+        padding: 15px;
+        margin: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <form  onsubmit="send()">
+      <label>Message</label>
+      <input type="text" id="message">
+      <input type="submit" value="Submit">
+    </form>
+    <script>
+      var socket = new WebSocket("ws://localhost:8080");
+
+      socket.onopen = function () {
+        console.log("OPENED : ", socket.readyState);
+      }
+
+      socket.onmessage = function (msg) {
+        console.log(msg);
+      }
+
+      socket.onclose = function () {
+        console.log("CLOSED : ", socket.readyState);
+      }
+
+      setTimeout(function () {
+        socket.send('test');
+      }, 2000);
+
+        function send() {
+        event.preventDefault();
+        var message = document.getElementById("message").value;
+        socket.send(message);
+        document.getElementById("message").value = '';
+      }
+
+    </script>
+  </body>
+
+</html>

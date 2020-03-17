@@ -1,6 +1,8 @@
 var jwt = require('jsonwebtoken');
 var express = require("express");
 var cookieParser = require('cookie-parser')
+const http = require('http')
+const WebSocket = require('ws')
 
 var MongoClient = require("mongodb").MongoClient
 
@@ -21,13 +23,44 @@ var secret = process.env.JWT_SECRET || "CHANGE_THIS_TO_SOMETHING_RANDOM";
 var app = express();
 var router = express.Router();
 
-app.set("view engine", "ejs")
+app.set("view engine", "ejs");
+app.use(express.static(__dirname + '/views'));
 app.use(cookieParser());
 app.use(express.urlencoded());
 app.use('/', router);
 
-app.listen(port);
+server = http.createServer(app);
 
+const wss = new WebSocket.Server({ server })
+
+wss.on('connection', function connection (ws, req) {
+  ws.on('message', function incoming (message) {
+
+    console.log('received: %s', message)
+    mongoClient.connect(function(err, client) {
+                if (err) {
+                    return console.log(err);
+                }
+
+                let owner = {
+                    name: message
+                }
+
+                console.log("owner ", owner);
+
+                client.db("BAR").collection("recipes").find(owner).toArray(function(err, results) {
+                    results.forEach(function (res) {
+                        ws.send(res.recipe)
+                    })
+                });
+            });
+  })
+
+  ws.send('something')
+})
+
+//app.listen(port);
+server.listen(port);
 router.post("/signup", function(req, res, next) {
     mongoClient.connect(function(err, client) {
         if (err) {
@@ -175,6 +208,11 @@ router.get("/addRecipe", function(req, res, next) {
     return res.render('addRecipe');
 })
 
+router.get("/bar", function(req, res, next) {
+    return res.render('bar');
+})
+
+
 // create JWT
 function generateToken(opts, user) {
     opts = opts || {};
@@ -200,7 +238,7 @@ function authSuccess(req, res, user) {
 
     res.cookie('token', token)
     res.writeHead(302, {
-        'Location': '/recipes'
+        'Location': '/bar'
     });
     return res.end();
 }
