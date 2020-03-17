@@ -16,33 +16,45 @@
   <body>
     <script>
       var socket = new WebSocket("ws://localhost:8080");
-
+      var token = document.cookie.match(/token=\S*/g)[0].split('token=')[1];
+      var name = '';
       socket.onopen = function () {
         console.log("OPENED : ", socket.readyState);
+        socket.send(JSON.stringify({
+          "cmd": "get_name",
+          "token": token
+        }));
       }
 
       socket.onmessage = function (msg) {
         console.log(msg);
+        var  json = JSON.parse(msg.data);
+        if (json) {
+          if (json.name) name = json.name;
+        }
       }
 
       socket.onclose = function () {
         console.log("CLOSED : ", socket.readyState);
       }
 
-      setTimeout(function () {
-        socket.send('test');
-      }, 2000);
-
-        function send() {
+      function send() {
         event.preventDefault();
         var message = document.getElementById("message").value;
         socket.send(message);
         document.getElementById("message").value = '';
       }
 
+      get_recipe = function () {
+        event.preventDefault();
+       socket.send(JSON.stringify({
+          "cmd": "get_recipe",
+          "name": name
+        })); 
+      }
+
     </script>
-  </body>
-  <div class="container-fluid">
+    <div class="container-fluid">
     <div class="row">
       <div class="col-md-4">
         <div class="jumbotron card card-block">
@@ -62,4 +74,8 @@
       </div>
     </div>
   </div>
+  <form onsubmit="get_recipe()"><input type="submit" class="btn btn-danger" value="yes" /></form> 
+  
+  </body>
+  
 </html>

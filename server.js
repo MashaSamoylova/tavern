@@ -1,9 +1,9 @@
 /* Modules */
 const cookieParser = require('cookie-parser')
-const jwt          = require('jsonwebtoken');
-const express      = require("express");
-const http         = require('http')
-const WebSocket    = require('ws')
+const jwt = require('jsonwebtoken');
+const express = require("express");
+const http = require('http')
+const WebSocket = require('ws')
 const {
     execSync
 } = require('child_process');
@@ -19,13 +19,17 @@ mongoClient.connect(function(err, client) {
     if (err) {
         return console.log(err);
     }
-    client.db("BAR").collection("users").createIndex({ name: 1 }, { unique: true }, function(err, result) {
-        if(err) {
-        console.log(err);
-    
+    client.db("BAR").collection("users").createIndex({
+        name: 1
+    }, {
+        unique: true
+    }, function(err, result) {
+        if (err) {
+            console.log(err);
+
         } else {
-        console.log(result);
-    } 
+            console.log(result);
+        }
     });
 });
 
@@ -45,7 +49,9 @@ const seed = "104101108108111";
 var app = express();
 var router = express.Router();
 var server = http.createServer(app);
-var wss = new WebSocket.Server({server})
+var wss = new WebSocket.Server({
+    server
+})
 
 app.set("view engine", "ejs");
 app.use(express.static(__dirname + '/views'));
@@ -74,28 +80,49 @@ server.listen(port);
 
 wss.on('connection', function connection(ws, req) {
     ws.on('message', function incoming(message) {
-
-        console.log('received: %s', message)
-        mongoClient.connect(function(err, client) {
-            if (err) {
-                return console.log(err);
+        var json = JSON.parse(message);
+        if (json.cmd == 'get_name') {
+            var decode = verify(json.token);
+            if (decode) {
+                ws.send(JSON.stringify({
+                    "name": decode.name
+                }));
+            } else {
+                ws.send(JSON.stringify({
+                    "name": "strange person"
+                }));
             }
 
-            let owner = {
-                name: message
+        }
+        if (json.cmd == 'get_recipe') {
+            var name = json.name;
+            if (name) {
+                console.log('received: %s', message)
+                mongoClient.connect(function(err, client) {
+                    if (err) {
+                        return console.log(err);
+                    }
+
+                    let owner = {
+                        name: name
+                    }
+
+                    console.log("owner ", owner);
+
+                    client.db("BAR").collection("recipes").find(owner).toArray(function(err, results) {
+                        results.forEach(function(res) {
+                            ws.send(JSON.stringify({
+                                "recipes": res.recipe
+                            }));
+                        })
+                    });
+                });
+            } else {
+                ws.send('something')
             }
+        }
 
-            console.log("owner ", owner);
-
-            client.db("BAR").collection("recipes").find(owner).toArray(function(err, results) {
-                results.forEach(function(res) {
-                    ws.send(res.recipe)
-                })
-            });
-        });
     })
-
-    ws.send('something')
 })
 
 
