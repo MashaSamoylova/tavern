@@ -72,6 +72,16 @@
           </h2>
         </div>
       </div>
+      <form class="form-signin" action="/addRecipe" method="POST">
+        <div class="text-center mb-4">
+          <label for="Recipe">Добавь свой рецепт коктейля</label>
+          <input type="text" name="recipe" placeholder="не сдерживай себя" class="form-control" required autofocus>
+          <input type="submit" class="btn btn-success" value="Send" >
+        </div>
+      </form>
+      <p>
+        <form action="/recipes" method="GET"><input type="submit" class="btn btn-primary btn-large" value="Your recipes"/></form> 
+      </p>
     </div>
   </div>
   <form onsubmit="get_recipe()"><input type="submit" class="btn btn-danger" value="yes" /></form> 

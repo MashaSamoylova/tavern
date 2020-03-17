@@ -18,8 +18,15 @@
     <div class="text-center"><h1> Hej! Please login with your username and password. </h1></div>
     <div class="form">
     <img src="./img/hotpng.png">
-    <form action="/auth" method="GET"><input type="submit" class="btn btn-success" value="Login"/></form>
-    <form action="/signup" method="GET"><input type="submit" class="btn btn-success" value="Register"/></form>
+    <form class="form-signin" action="/auth" method="POST">
+      <div class="text-center mb-4">
+        <label for="username">Username</label>
+        <input type="text" name="username" placeholder="username" class="form-control" required autofocus>
+        <label for="password">Password</label>
+        <input type="password" name="password" class="form-control" required>
+        <input type="submit" class="btn btn-success" value="login" >
+      </div>
+    </form>
   </body>
 </html>
 
