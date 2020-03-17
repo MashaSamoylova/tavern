@@ -14,11 +14,6 @@
     </style>
   </head>
   <body>
-    <form  onsubmit="send()">
-      <label>Message</label>
-      <input type="text" id="message">
-      <input type="submit" value="Submit">
-    </form>
     <script>
       var socket = new WebSocket("ws://localhost:8080");
 
@@ -47,5 +42,24 @@
 
     </script>
   </body>
-
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-4">
+        <div class="jumbotron card card-block">
+          <h2>
+            Заходят
+          </h2>
+          <%if (records.length > 0){ %>
+            <% records.forEach(function(row){ %>
+              <p style="display:inline"><%= row.name + ","%></p>
+            <% })}else{ %>
+              <p></p>
+            <% } %>
+          <h2>
+            в бар, а бармен им "Hej! Please login with your username and password."
+          </h2>
+        </div>
+      </div>
+    </div>
+  </div>
 </html>

@@ -13,8 +13,9 @@ services:
         container_name: node_container
         networks:
             - backend
-  #      volumes:
-   #         - ./:/root/app
+        volumes:
+            - ./:/root/app
+            - /root/app/node_modules
         ports:
             - 8080:8080
 
