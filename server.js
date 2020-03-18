@@ -132,7 +132,6 @@ wss.on('connection', function connection(ws, req) {
     })
 })
 
-
 router.get("/", function(req, res, next) {
     var decoded = verify(req.cookies.token);
     console.log(decoded);
@@ -145,7 +144,6 @@ router.get("/", function(req, res, next) {
         return res.end();
     }
 })
-
 
 router.post("/signup", function(req, res, next) {
     mongoClient.connect(function(err, client) {
@@ -208,7 +206,6 @@ router.post("/auth", function(req, res, next) {
         });
     });
 })
-
 
 router.get("/auth", function(req, res, next) {
     return res.render('auth')
