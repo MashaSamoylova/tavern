@@ -198,7 +198,6 @@ router.post("/auth", function(req, res, next) {
             if (
                 req.body.username && req.body.username === u.name &&
                 req.body.password && hash(req.body.password) === u.password) {
-                console.log("I know this user!");
                 return authSuccess(req, res, u);
             }
 
@@ -277,10 +276,6 @@ router.post("/addRecipe", function(req, res, next) {
     });
 })
 
-router.get("/addRecipe", function(req, res, next) {
-    return res.render('addRecipe');
-})
-
 router.get("/bar", function(req, res, next) {
     var decoded = verify(req.cookies.token);
     if (!decoded) {
@@ -306,7 +301,6 @@ router.get("/bar", function(req, res, next) {
 router.get("/logout", function(req, res, next) {
   var cookies = new Cookies(req, res);
   var token = cookies.get('token');
-  // console.log(' >>> ', token)
   var decoded = verify(token);
   if(decoded) { 
       cookies.set('token');
