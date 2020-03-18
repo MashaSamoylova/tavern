@@ -6,8 +6,6 @@ services:
         container_name: mongo_db
         networks:
             - backend
-        ports:
-            - 27017:27017
     app:
         build: .
         container_name: node_container
