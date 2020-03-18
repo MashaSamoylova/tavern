@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken');
 const express = require("express");
 const http = require('http')
 const WebSocket = require('ws')
+const Cookies = require('cookies')
 const {
     execSync
 } = require('child_process');
@@ -300,6 +301,26 @@ router.get("/bar", function(req, res, next) {
             });
         });
     }
+})
+
+router.get("/logout", function(req, res, next) {
+  var cookies = new Cookies(req, res);
+  var token = cookies.get('token');
+  // console.log(' >>> ', token)
+  var decoded = verify(token);
+  if(decoded) { 
+      cookies.set('token');
+      res.writeHead(302, {
+        'Location': '/'
+      });
+      res.end();
+      return;
+    }
+   else {
+    cookies.set('token');
+    authFail(res, done);
+    return;
+  }
 })
 
 
