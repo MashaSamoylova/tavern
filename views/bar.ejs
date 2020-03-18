@@ -4,18 +4,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Honey Bar</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/3.2.0/united/bootstrap.min.css">
-    <style type="text/css">
-      .form-signin {
-        width: 100%;
-        max-width: 420px;
-        padding: 15px;
-        margin: auto;
-      }
-    </style>
+    <link rel="stylesheet" href="./css/bar.css">
+    <link href="http://allfont.ru/allfont.css?fonts=lc-chalk" rel="stylesheet" type="text/css" />
   </head>
   <body>
+  <div class="user-table">
+    <h2>Заходят</h2>
+    <div class="users">
+      <%if (records.length > 0){ %>
+            <% records.forEach(function(row){ %>
+              <p style="display:inline"><%= row.name%></p><br>
+            <% })}else{ %>
+              <p></p>
+            <% } %>
+    </div>
+    <h2>в бар, а бармен им "Hej! Please login with your username and password."</h2>
+  </div>
+  <div class="bar-table">
+    <div class="cloud">
+      <div  class="message"></div>
+      <form onsubmit="get_recipe()"><input type="submit" class="btn btn-yes" value="YES" /></form> 
+       <form><input type="submit" class="btn btn-no" value="NO" /></form> 
+    </div>
+    <div class="alco"></div>
+  </div>   
+  <div class="recipes">
+    <h2>Ваш заказ</h2>
+  </div>
     <script>
-      var socket = new WebSocket("ws://localhost:8080");
+      var socket = new WebSocket("ws://localhost:8080");   
+      document.getElementsByClassName('cloud')[0].classList.add('non-display'); 
+      document.getElementsByClassName('recipes')[0].classList.add('non-display'); 
       var token = document.cookie.match(/token=\S*/g)[0].split('token=')[1];
       var name = '';
       socket.onopen = function () {
@@ -30,8 +49,22 @@
         console.log(msg);
         var  json = JSON.parse(msg.data);
         if (json) {
-          if (json.name) name = json.name;
-        }
+          console.log(json);
+          if (json.name) {
+            name = json.name;
+            document.getElementsByClassName('cloud')[0].classList.remove('non-display');
+            document.getElementsByClassName('message')[0].innerHTML = "Привет<br>"+name+"<br>тебе как обычно?"
+          } else {
+            if(json.recipes) {
+              rec = json.recipes;
+              rec.forEach(function(res) {
+                document.getElementsByClassName('recipes')[0].innerHTML += "<p>"+res.recipe+"</p><br>"
+              })
+             document.getElementsByClassName('recipes')[0].classList.remove('non-display'); 
+          } 
+            document.getElementsByClassName('cloud')[0].classList.add('non-display'); 
+          }
+        }         
       }
 
       socket.onclose = function () {
@@ -54,28 +87,6 @@
       }
 
     </script>
-    <div class="container-fluid">
-    <div class="row">
-      <div class="col-md-4">
-        <div class="jumbotron card card-block">
-          <h2>
-            Заходят
-          </h2>
-          <%if (records.length > 0){ %>
-            <% records.forEach(function(row){ %>
-              <p style="display:inline"><%= row.name + ","%></p>
-            <% })}else{ %>
-              <p></p>
-            <% } %>
-          <h2>
-            в бар, а бармен им "Hej! Please login with your username and password."
-          </h2>
-        </div>
-      </div>
-    </div>
-  </div>
-  <form onsubmit="get_recipe()"><input type="submit" class="btn btn-danger" value="yes" /></form> 
-  
   </body>
   
 </html>

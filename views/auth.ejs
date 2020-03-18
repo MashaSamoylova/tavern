@@ -2,17 +2,15 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Honey Bar</title>
+    <title>Authentication with JSON Web Tokens</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/3.2.0/united/bootstrap.min.css">
     <link rel="stylesheet" href="./css/signup.css">
   </head>
-
   <body>
-    <body>
     <div class="text-center"><h1> Hej! Please login with your username and password. </h1></div>
     <div class="form">
       <div class="text-center mb-4">
-        <form class="form-signin" action="/signup" method="POST">
+        <form class="form-signin" action="/auth" method="POST">
           <div class="username">
              <label for="username">Username</label>
             <input type="text" name="username" placeholder="username" class="form-control" required autofocus>
@@ -21,9 +19,8 @@
             <label for="password">Password</label>
             <input type="password" name="password" placeholder="password" class="form-control" required>
           </div>
-         <input type="submit" class="btn btn-success" value="Register" >
+         <input type="submit" class="btn btn-success" value="Login" >
         </form>
       </div>
-  </body>
   </body>
 </html>

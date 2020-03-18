@@ -1,26 +1,60 @@
 body {
 	background-image: url(../img/back.jpeg);
+	text-align: center;
 }
 
 .form {
 	text-align: center;
-}
-
-.form img {
-	position: absolute;
-	z-index: -1;
-	left: 410px;
-	width: 400px;
-    top: -10px;
+    background-image: url(../img/hotpng.png);
+    background-repeat: no-repeat;
+    height: 500px;
+    width: 500px;
+    display: inline-block;
+    position: relative;
 }
 
 .text-center.mb-4{
-	width: 250px;
-	padding-top: 88px;
+	padding-top: 220px;
 }
 
 .btn.btn-success {
 	margin-top: 16px;
-	background-color: #a26a2f;
-	border-color: #a26a2f;
+    background-color: #a26a2f;
+    border-color: #a26a2f;
+    bottom: 20px;
+    font-size: 22px;
+    border-radius: 5px;
+    width: 120px;
+}
+
+.text-center {
+	position: absolute;
+	width: 100%;
+	text-align: center;
+	z-index: 1;
+}
+
+.index-btn {
+	/*position: absolute;*/
+    width: 100%;
+    padding-top: 310px;
+}
+	.index-log {
+		float: left;
+		margin-left: 120px;
+	}
+
+	.index-reg {
+		float: right;
+		margin-right: 120px;
+	}
+
+.form-signin {
+	max-width: 250px;
+	padding: 15px;
+    margin: auto;
+}
+
+.username, .password {
+	margin-bottom: 20px
 }
