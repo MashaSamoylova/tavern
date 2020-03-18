@@ -38,6 +38,10 @@ def check(hostname):
                                                             'password': password})
         if not resp.status_code == 200 or not resp.url.endswith('/bar'):
             _die('prot')
+        
+        if username not in resp.text:
+            _die('prot')
+
         resp = s.post('http://' + hostname + '/addRecipe', data={'recipe': flag})
         if not resp.status_code == 200 or not resp.url.endswith('/recipes'):
             _die('prot')
