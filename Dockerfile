@@ -11,7 +11,7 @@ RUN apt-get install -y nodejs
 WORKDIR /root/app
 
 COPY package.json .
-RUN npm install
+RUN npm install --loglevel=error
 
 COPY . .
 
