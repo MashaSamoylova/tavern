@@ -5,21 +5,15 @@
     <title>Authentication with JSON Web Tokens</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/3.2.0/united/bootstrap.min.css">
     <link rel="stylesheet" href="./css/signup.css">
-    <style type="text/css">
-      .form-signin {
-        width: 100%;
-        max-width: 420px;
-        padding: 15px;
-        margin: auto;
-      }
-    </style>
   </head>
   <body>
     <div class="text-center"><h1> Hej! Please login with your username and password. </h1></div>
     <div class="form">
-    <img src="./img/hotpng.png">
-    <form action="/auth" method="GET"><input type="submit" class="btn btn-success" value="Login"/></form>
-    <form action="/signup" method="GET"><input type="submit" class="btn btn-success" value="Register"/></form>
+      <div class="index-btn">
+        <form class="index-log" action="/auth" method="GET"><input type="submit" class="btn btn-success" value="Login"/></form>
+        <form class="index-reg" action="/signup" method="GET"><input type="submit" class="btn btn-success" value="Register"/></form>
+    </div>
+  </div>
   </body>
 </html>
 

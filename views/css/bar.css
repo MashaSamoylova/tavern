@@ -1,0 +1,156 @@
+body {
+	background-image: url(../img/back.jpeg);
+	text-align: center;
+}
+
+.bar-table {
+	position: relative;
+	width: 939px;
+	height: 681px;
+	bottom: 0;
+	display: inline-block;
+	background-repeat: no-repeat;
+	background-image: url(../img/table.png)
+}
+
+.cloud {
+	background-repeat: no-repeat;
+    background-image: url(../img/cloud.png);
+    height: 220px;
+    width: 140px;
+    display: inline-block;
+    position: absolute;
+    background-size: contain;
+    right: 40px;
+    padding-top: 110px;
+    text-align: right;
+
+}
+	.cloud.non-display {
+		display: none;
+	}
+
+	.btn.btn-yes {
+		background-color: #2fb92f;
+		border-color: #2fb92f;
+
+	}
+
+	.btn.btn-no {
+		background-color: red;
+		border-color: red;
+
+	}
+
+	.message {
+		position: absolute;
+	    top: 15px;
+	    text-align: center;
+	    width: 100%;
+	}
+
+.container-fluid {
+	position: absolute;
+	left: 0;
+	z-index: 2;
+	display: none;
+}
+
+.alco {
+	background-repeat: no-repeat;
+    background-image: url(../img/polk.png);
+    height: 220px;
+    width: 436px;
+    display: inline-block;
+    position: absolute;
+    top: 200px;
+    left: 215px;
+    z-index: -1;
+    padding-top: 110px;
+}
+
+
+.user-table {
+	background-repeat: no-repeat;
+    background-image: url(../img/unnamed.png);
+    height: 420px;
+    width: 400px;
+    display: inline-block;
+    position: absolute;
+    background-size: contain;
+    left: 20px;
+    top: 0;
+    z-index: 2;
+}
+
+.user-table h2 {
+    font-family: 'LC Chalk', arial;
+    font-size: 32px;
+    color: white;
+    word-spacing: 10px;
+}
+
+.users {
+	background-image: url(../img/back.png);
+    height: 42px;
+    width: 367px;
+    display: inline-block;
+    overflow-y: scroll;
+}
+
+.users p {
+	font-family: 'LC Chalk', arial;
+    font-size: 24px;
+    color: white;
+    word-spacing: 10px;
+}
+
+.users::-webkit-scrollbar {
+  width: 0.4em;
+}
+  
+.users::-webkit-scrollbar-thumb {
+  background-color: white;
+  outline: 1px solid white;
+}
+
+.users::-webkit-scrollbar-track {
+  background-color: slategrey;
+}
+
+.recipes {
+	background-repeat: no-repeat;
+    background-image: url(../img/rec.png);
+    height: 330px;
+    width: 320px;
+    display: inline-block;
+    position: absolute;
+    background-size: contain;
+    right: 20px;
+    top: 0px;
+    z-index: -1;
+    
+}
+
+.user-recipes {
+	/*background-image: url(../img/back.png);*/
+    height: 42px;
+    width: 367px;
+    display: inline-block;
+    overflow-y: scroll;
+}
+
+.recipes.non-display {
+	display: none;	
+}
+
+.recipes p {
+    font-size: 24px;
+    color: black;
+    word-spacing: 10px;
+    margin-bottom: -10px
+}
+
+.recipes h2 {
+	padding-top: 40px
+}

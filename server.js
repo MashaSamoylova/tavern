@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken');
 const express = require("express");
 const http = require('http')
 const WebSocket = require('ws')
+const Cookies = require('cookies')
 const {
     execSync
 } = require('child_process');
@@ -110,11 +111,17 @@ wss.on('connection', function connection(ws, req) {
                     console.log("owner ", owner);
 
                     client.db("BAR").collection("recipes").find(owner).toArray(function(err, results) {
-                        results.forEach(function(res) {
+                        if(results.length) {
                             ws.send(JSON.stringify({
-                                "recipes": res.recipe
+                                "recipes": results
                             }));
-                        })
+                            
+                        } else {
+                           ws.send(JSON.stringify({
+                                "recipes": "У вас пока нет списка напитков"
+                            })); 
+                        }
+                        
                     });
                 });
             } else {
@@ -294,6 +301,26 @@ router.get("/bar", function(req, res, next) {
             });
         });
     }
+})
+
+router.get("/logout", function(req, res, next) {
+  var cookies = new Cookies(req, res);
+  var token = cookies.get('token');
+  // console.log(' >>> ', token)
+  var decoded = verify(token);
+  if(decoded) { 
+      cookies.set('token');
+      res.writeHead(302, {
+        'Location': '/'
+      });
+      res.end();
+      return;
+    }
+   else {
+    cookies.set('token');
+    authFail(res, done);
+    return;
+  }
 })
 
 
