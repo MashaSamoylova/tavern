@@ -1,0 +1,31 @@
+body {
+	background-image: url(../img/back.jpeg);
+	text-align: center;
+}
+
+.table-striped>tbody>tr:nth-child(odd)>td{
+	background-color: transparent;
+	/*background-image: url(../img/wood.jpeg);*/
+	color: white;
+	border: none;
+}
+
+.table>tbody>tr>td,  {
+	border: none;	
+}
+
+.table>thead>tr>th {
+	border: none;: 
+}
+
+.table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td {
+	border: none;
+	color: white;
+}
+
+.table {
+	background-image: url(../img/wood.jpg);
+	width: 500px;
+	display: inline-block;
+
+}
