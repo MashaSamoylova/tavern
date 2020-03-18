@@ -28,12 +28,23 @@
     </div>
     <div class="alco">
       <div class="bottles">
-      <img id=1 class="bottle" src="./img/bottle1.png">
-      <img id=2 class="bottle" src="./img/bottle2.png">
-      <img id=3 class="bottle" src="./img/bottle3.png">
-      <img id=4 class="bottle" src="./img/bottle4.png">
-      <img id=5 class="bottle" src="./img/bottle5.png">
+      <img id=1 class="bottle" src="./img/bottle1.png" onclick="get_value(this.id)" value="Wine">
+      <img id=2 class="bottle" src="./img/bottle2.png" onclick="get_value(this.id)" value="Liquor">
+      <img id=3 class="bottle" src="./img/bottle3.png" onclick="get_value(this.id)" value="Absinthe">
+      <img id=4 class="bottle" src="./img/bottle4.png" onclick="get_value(this.id)" value="Brandy">
+      <img id=5 class="bottle" src="./img/bottle5.png" onclick="get_value(this.id)" value="Whiskey">
       </div>
+    </div>
+    <div class="new-recipe">
+      <div class="form">
+      <div class="text-center mb-4">
+        <form class="form-signin" action="/addRecipe" method="POST">
+        <label for="Recipe">Добавь свой рецепт коктейля</label>
+        <input type="text" name="recipe" placeholder="не сдерживай себя" class="form-control" required autofocus>
+        <input type="submit" class="btn btn-success" value="Send" >
+        </form>
+      </div>
+     </div>
     </div>
   </div>   
   <div class="recipes">
@@ -96,7 +107,18 @@
       }
 
       close_cloud = function () {
+         event.preventDefault();
         document.getElementsByClassName('cloud')[0].classList.add('non-display'); 
+      }
+
+      get_value = function (id) {
+        var value = document.getElementsByClassName('form-control')[0].getAttribute('value');
+        if(!value) {
+          value = document.getElementById(id).getAttribute('value')
+        } else {
+          value += "+" + document.getElementById(id).getAttribute('value');
+        }
+        document.getElementsByClassName('form-control')[0].setAttribute('value', value)      
       }
 
     </script>

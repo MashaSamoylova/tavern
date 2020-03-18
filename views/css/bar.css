@@ -161,26 +161,63 @@ body {
 
 .alco {
 	background-repeat: no-repeat;
-    background-image: url(../img/polk.png);
-    height: 220px;
     width: 436px;
     display: inline-block;
     position: absolute;
     top: 200px;
     left: 215px;
-    z-index: -1;
     padding-top: 110px;
 }
 
 .bottles {
 	position: relative;
     width: 100%;
-    bottom: 290px;
+    bottom: 250px;
 }
 
 .bottle {
-	max-height: 200px;
+	max-height: 170px;
     width: auto;
     height: auto;
 }
 
+
+.new-recipe {
+	position: absolute;
+    width: 100%;
+    bottom: 90px;
+}
+
+.form {
+	text-align: center;
+    background-image: url(../img/addrec.png);
+    background-repeat: no-repeat;
+    height: 200px;
+    width: 360px;
+    display: inline-block;
+    position: relative;
+    background-size: contain;
+}
+
+.text-center {
+	text-align: center;
+    padding-top: 25px;
+    color: wheat;
+}
+
+.form-signin {
+	max-width: 250px;
+	padding: 15px;
+    margin: auto;
+}
+
+.btn.btn-success {
+	margin-top: 10px;
+    background-color: #a26a2f;
+    border-color: #a26a2f;
+    bottom: 20px;
+    font-size: 18px;
+    border-radius: 5px;
+    width: 100px;
+    padding: 5px;
+}
