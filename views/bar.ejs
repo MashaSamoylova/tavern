@@ -24,12 +24,21 @@
     <div class="cloud">
       <div  class="message"></div>
       <form onsubmit="get_recipe()"><input type="submit" class="btn btn-yes" value="YES" /></form> 
-       <form><input type="submit" class="btn btn-no" value="NO" /></form> 
+       <form onsubmit="close_cloud()"><input type="submit" class="btn btn-no" value="NO" /></form> 
     </div>
-    <div class="alco"></div>
+    <div class="alco">
+      <div class="bottles">
+      <img id=1 class="bottle" src="./img/bottle1.png">
+      <img id=2 class="bottle" src="./img/bottle2.png">
+      <img id=3 class="bottle" src="./img/bottle3.png">
+      <img id=4 class="bottle" src="./img/bottle4.png">
+      <img id=5 class="bottle" src="./img/bottle5.png">
+      </div>
+    </div>
   </div>   
   <div class="recipes">
     <h2>Ваш заказ</h2>
+    <div class="user-recipes"></div>
   </div>
     <script>
       var socket = new WebSocket("ws://localhost:8080");   
@@ -58,7 +67,7 @@
             if(json.recipes) {
               rec = json.recipes;
               rec.forEach(function(res) {
-                document.getElementsByClassName('recipes')[0].innerHTML += "<p>"+res.recipe+"</p><br>"
+                document.getElementsByClassName('user-recipes')[0].innerHTML += "<p>"+res.recipe+"</p><br>"
               })
              document.getElementsByClassName('recipes')[0].classList.remove('non-display'); 
           } 
@@ -84,6 +93,10 @@
           "cmd": "get_recipe",
           "name": name
         })); 
+      }
+
+      close_cloud = function () {
+        document.getElementsByClassName('cloud')[0].classList.add('non-display'); 
       }
 
     </script>

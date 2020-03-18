@@ -56,18 +56,7 @@ body {
 	display: none;
 }
 
-.alco {
-	background-repeat: no-repeat;
-    background-image: url(../img/polk.png);
-    height: 220px;
-    width: 436px;
-    display: inline-block;
-    position: absolute;
-    top: 200px;
-    left: 215px;
-    z-index: -1;
-    padding-top: 110px;
-}
+
 
 
 .user-table {
@@ -95,7 +84,7 @@ body {
     height: 42px;
     width: 367px;
     display: inline-block;
-    overflow-y: scroll;
+    overflow: scroll;
 }
 
 .users p {
@@ -107,6 +96,7 @@ body {
 
 .users::-webkit-scrollbar {
   width: 0.4em;
+  height: 0.2em;
 }
   
 .users::-webkit-scrollbar-thumb {
@@ -128,16 +118,16 @@ body {
     background-size: contain;
     right: 20px;
     top: 0px;
-    z-index: -1;
+    z-index: 3;
     
 }
 
 .user-recipes {
-	/*background-image: url(../img/back.png);*/
-    height: 42px;
-    width: 367px;
+	background-image: url(../img/paper-back.png);
+    height: 102px;
+    width: 167px;
     display: inline-block;
-    overflow-y: scroll;
+    overflow: scroll;
 }
 
 .recipes.non-display {
@@ -154,3 +144,43 @@ body {
 .recipes h2 {
 	padding-top: 40px
 }
+
+.user-recipes::-webkit-scrollbar {
+  width: 0.4em;
+  height: 0.4em;
+}
+  
+.user-recipes::-webkit-scrollbar-thumb {
+  background-color: white;
+  outline: 1px solid white;
+}
+
+.user-recipes::-webkit-scrollbar-track {
+  background-color: #f5e687;
+}
+
+.alco {
+	background-repeat: no-repeat;
+    background-image: url(../img/polk.png);
+    height: 220px;
+    width: 436px;
+    display: inline-block;
+    position: absolute;
+    top: 200px;
+    left: 215px;
+    z-index: -1;
+    padding-top: 110px;
+}
+
+.bottles {
+	position: relative;
+    width: 100%;
+    bottom: 290px;
+}
+
+.bottle {
+	max-height: 200px;
+    width: auto;
+    height: auto;
+}
+
