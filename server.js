@@ -111,11 +111,17 @@ wss.on('connection', function connection(ws, req) {
                     console.log("owner ", owner);
 
                     client.db("BAR").collection("recipes").find(owner).toArray(function(err, results) {
-                        results.forEach(function(res) {
+                        if(results.length) {
                             ws.send(JSON.stringify({
-                                "recipes": res.recipe
+                                "recipes": results
                             }));
-                        })
+                            
+                        } else {
+                           ws.send(JSON.stringify({
+                                "recipes": "У вас пока нет списка напитков"
+                            })); 
+                        }
+                        
                     });
                 });
             } else {
@@ -131,10 +137,7 @@ router.get("/", function(req, res, next) {
     var decoded = verify(req.cookies.token);
     console.log(decoded);
     if (!decoded) {
-        res.writeHead(302, {
-            'Location': '/auth'
-        });
-        return res.end();
+        return res.render('index');
     } else {
         res.writeHead(302, {
             'Location': '/bar'
@@ -208,7 +211,7 @@ router.post("/auth", function(req, res, next) {
 
 
 router.get("/auth", function(req, res, next) {
-    return res.render('index')
+    return res.render('auth')
 })
 
 router.get("/recipes", function(req, res, next) {
