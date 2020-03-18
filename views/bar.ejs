@@ -54,6 +54,7 @@
     <script>
       var socket = new WebSocket("ws://localhost:8080");   
       document.getElementsByClassName('cloud')[0].classList.add('non-display'); 
+      document.getElementsByClassName('form-control')[0].setAttribute('value', '');
       document.getElementsByClassName('recipes')[0].classList.add('non-display'); 
       var token = document.cookie.match(/token=\S*/g)[0].split('token=')[1];
       var name = '';
