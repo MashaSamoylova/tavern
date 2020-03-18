@@ -24,12 +24,32 @@
     <div class="cloud">
       <div  class="message"></div>
       <form onsubmit="get_recipe()"><input type="submit" class="btn btn-yes" value="YES" /></form> 
-       <form><input type="submit" class="btn btn-no" value="NO" /></form> 
+       <form onsubmit="close_cloud()"><input type="submit" class="btn btn-no" value="NO" /></form> 
     </div>
-    <div class="alco"></div>
+    <div class="alco">
+      <div class="bottles">
+      <img id=1 class="bottle" src="./img/bottle1.png" onclick="get_value(this.id)" value="Wine">
+      <img id=2 class="bottle" src="./img/bottle2.png" onclick="get_value(this.id)" value="Liquor">
+      <img id=3 class="bottle" src="./img/bottle3.png" onclick="get_value(this.id)" value="Absinthe">
+      <img id=4 class="bottle" src="./img/bottle4.png" onclick="get_value(this.id)" value="Brandy">
+      <img id=5 class="bottle" src="./img/bottle5.png" onclick="get_value(this.id)" value="Whiskey">
+      </div>
+    </div>
+    <div class="new-recipe">
+      <div class="form">
+      <div class="text-center mb-4">
+        <form class="form-signin" action="/addRecipe" method="POST">
+        <label for="Recipe">Добавь свой рецепт коктейля</label>
+        <input type="text" name="recipe" placeholder="не сдерживай себя" class="form-control" required autofocus>
+        <input type="submit" class="btn btn-success" value="Send" >
+        </form>
+      </div>
+     </div>
+    </div>
   </div>   
   <div class="recipes">
     <h2>Ваш заказ</h2>
+    <div class="user-recipes"></div>
   </div>
     <script>
       var socket = new WebSocket("ws://localhost:8080");   
@@ -58,7 +78,7 @@
             if(json.recipes) {
               rec = json.recipes;
               rec.forEach(function(res) {
-                document.getElementsByClassName('recipes')[0].innerHTML += "<p>"+res.recipe+"</p><br>"
+                document.getElementsByClassName('user-recipes')[0].innerHTML += "<p>"+res.recipe+"</p><br>"
               })
              document.getElementsByClassName('recipes')[0].classList.remove('non-display'); 
           } 
@@ -84,6 +104,21 @@
           "cmd": "get_recipe",
           "name": name
         })); 
+      }
+
+      close_cloud = function () {
+         event.preventDefault();
+        document.getElementsByClassName('cloud')[0].classList.add('non-display'); 
+      }
+
+      get_value = function (id) {
+        var value = document.getElementsByClassName('form-control')[0].getAttribute('value');
+        if(!value) {
+          value = document.getElementById(id).getAttribute('value')
+        } else {
+          value += "+" + document.getElementById(id).getAttribute('value');
+        }
+        document.getElementsByClassName('form-control')[0].setAttribute('value', value)      
       }
 
     </script>
