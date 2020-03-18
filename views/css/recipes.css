@@ -1,0 +1,19 @@
+body {
+	background-image: url(../img/back.jpeg);
+}
+
+.table-striped>tbody>tr:nth-child(odd)>td{
+	background-image: url(../img/wood.jpg);
+	color: white;
+	border: none;
+}
+
+.table>tbody>tr>td,  {
+	border: none;	
+}
+
+
+
+.table>thead>tr>th {
+	border: none;: 
+}
