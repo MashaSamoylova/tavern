@@ -1,0 +1,8 @@
+@font-face {
+    font-family: 'LC Chalk';
+    font-style: normal;
+    font-weight: 400;
+    src: local('LC Chalk'), local('LCChalk-Regular'),
+        url(../fonts/lc-chalk_f1d4fe8c891a041c5c29929c73b3870a.woff) format('woff'),
+        url(../fonts/lc-chalk_f1d4fe8c891a041c5c29929c73b3870a.ttf) format('truetype');
+}
