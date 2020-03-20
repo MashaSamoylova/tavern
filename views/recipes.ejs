@@ -15,7 +15,7 @@
     </style>
   </head>
   <body>
-    <div class="text-center"><h1> Recipes</h1></div>
+    <div class="rec-title"><h1>Recipes</h1></div>
     <div class="text-center">
         <table class="table table-striped table-primary">
             <thead>
@@ -28,8 +28,8 @@
               <%if (records.length > 0){ %>
               <% records.forEach(function(row){ %>
               <tr>
-                <td><%= row.name %></td>
-                <td><%= row.recipe %></td>
+                <td class="owner"><%= row.name %></td>
+                <td class="recipe"><%= row.recipe %></td>
               </tr>
               <% })}else{ %>
                 <tr>
@@ -39,5 +39,8 @@
             </tbody>
           </table>
     </div>
+    <form class="back" action="/bar" method="GET">
+        <input type="image" name="image" class="img-pointer" src="./img/new-back-znak.png"/>
+    </form>
   </body>
 </html>

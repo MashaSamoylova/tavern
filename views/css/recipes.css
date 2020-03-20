@@ -6,7 +6,8 @@ body {
 .table-striped>tbody>tr:nth-child(odd)>td{
 	background-color: transparent;
 	/*background-image: url(../img/wood.jpeg);*/
-	color: white;
+	color: wheat;
+	font-weight: bold;
 	border: none;
 }
 
@@ -20,12 +21,62 @@ body {
 
 .table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td {
 	border: none;
-	color: white;
+	color: wheat;
+	font-weight: bold;
 }
 
 .table {
-	background-image: url(../img/wood.jpg);
-	width: 500px;
+	background-image: url(../img/wood_1.png);
+	width: 498px;
 	display: inline-block;
+	margin-left: 4px;
 
+
+}
+
+.rec-title {
+	text-align: center;
+    background-image: url(../img/wood_2.png);
+    background-repeat: no-repeat;
+    height: 185px;
+    background-position: center;
+    background-size: contain;
+}
+
+.rec-title h1 {
+	position: absolute;
+    width: 100%;
+    top: 110px;
+    color: #633221
+}
+
+ td.recipe {
+	width: 400px;
+	word-break: break-all;
+}
+
+td.owner {
+	max-width: 100px;
+	word-break: break-all;
+}
+
+
+.back {
+	position: absolute;
+	display: inline-block;
+	width: 200px;
+	height: auto;
+	bottom: 0;
+	margin-bottom: 0;
+	left: 0;
+}
+
+
+.img-pointer {
+	width: inherit;
+	outline: none;
+}
+
+input[type="image"] {
+	outline: none;
 }
